@@ -128,3 +128,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.env.development
+teaworkapp-firebase-adminsdk-lfjb4-82c588d432.json
