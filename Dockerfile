@@ -13,6 +13,7 @@ FROM node:${NODE_VERSION}-alpine
 # Use production node environment by default.
 ENV NODE_ENV production
 
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
 WORKDIR /usr/src/app
 
@@ -29,10 +30,12 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 USER node
 
 # Copy the rest of the source files into the image.
-COPY . .
+COPY . ./
 
 # Expose the port that the application listens on.
 EXPOSE 3001
 
 # Run the application.
 CMD yarn start
+
+ENTRYPOINT [ "node", "node ./bin/www" ]
