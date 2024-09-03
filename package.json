@@ -5,7 +5,7 @@
   "main": "./index.js",
   "type": "module",
   "scripts": {
-    "start": "node --env-file=.env.development ./index.js",
+    "start": "node ./index.js",
     "dev": "nodemon --env-file=.env.development ./index.js",
     "deploy:gcp": "docker compose build && gcloud builds submit --tag gcr.io/teaworkapp/teawork-be --project teaworkapp && gcloud run deploy --image gcr.io/teaworkapp/teawork-be --project teaworkapp --platform managed"
   },
