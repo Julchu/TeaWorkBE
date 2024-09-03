@@ -7,10 +7,13 @@ const router = Router();
 
 // Use '192.168.50.229' for Docker
 // Use localhost for local
-// process.env["FIRESTORE_EMULATOR_HOST"] = "192.168.50.229:8080";
-// process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "192.168.50.229:9099";
-
-console.log(firebaseConfig);
+if (process.env.EMULATOR_ENV) {
+  process.env["FIRESTORE_EMULATOR_HOST"] = "localhost:8080";
+  process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "localhost:9099";
+} else if (process.env.DOCKER_ENV) {
+  process.env["FIRESTORE_EMULATOR_HOST"] = "192.168.50.229:8080";
+  process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "192.168.50.229:9099";
+}
 
 initializeApp({
   credential: cert(firebaseConfig),

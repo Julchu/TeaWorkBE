@@ -11,27 +11,6 @@ import { createServer } from "http";
 const debugServer = debug("teawork-be:server");
 
 /**
- * Get port from environment and store in Express.
- */
-
-const port = normalizePort(process.env.PORT || "3001");
-app.set("port", port);
-
-/**
- * Create HTTP server.
- */
-
-const server = createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
-
-/**
  * Normalize a port into a number, string, or false.
  */
 
@@ -86,3 +65,24 @@ const onListening = () => {
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debugServer("Listening on " + bind);
 };
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || "3001");
+app.set("port", port);
+
+/**
+ * Create HTTP server.
+ */
+
+const server = createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on("error", onError);
+server.on("listening", onListening);
