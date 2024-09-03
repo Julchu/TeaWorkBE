@@ -12,4 +12,4 @@ const firebaseConfig = {
   universe_domain: process.env.UNIVERSE_DOMAIN,
 };
 
-module.exports = firebaseConfig;
+export default firebaseConfig;

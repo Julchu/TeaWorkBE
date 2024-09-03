@@ -1,7 +1,7 @@
-const { getAuth } = require("firebase-admin/auth");
-const { getFirestore } = require("firebase-admin/firestore");
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 
-const authenticateUser = async (token) => {
+export const authenticateUser = async (token) => {
   try {
     return await getAuth().verifyIdToken(token);
   } catch (error) {
@@ -10,7 +10,7 @@ const authenticateUser = async (token) => {
   return;
 };
 
-const fetchUser = async (authUser) => {
+export const fetchUser = async (authUser) => {
   try {
     if (authUser.user_id) {
       return (
@@ -22,5 +22,3 @@ const fetchUser = async (authUser) => {
   }
   return;
 };
-
-module.exports = { fetchUser, authenticateUser };
