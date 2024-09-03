@@ -1,5 +1,5 @@
-const { getAuth } = require("firebase-admin/auth");
-const { getFirestore } = require("firebase-admin/firestore");
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 
 const fetchUser = async (token) => {
   try {
@@ -22,4 +22,4 @@ const fetchUser = async (token) => {
   }
 };
 
-module.exports = fetchUser;
+export default fetchUser;
