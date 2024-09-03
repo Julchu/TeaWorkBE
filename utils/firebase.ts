@@ -1,7 +1,8 @@
-import { getAuth } from "firebase-admin/auth";
+import { DecodedIdToken, getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
-export const authenticateUser = async (token) => {
+export const authenticateUser = async (token?: string) => {
+  if (!token) return;
   try {
     return await getAuth().verifyIdToken(token);
   } catch (error) {
@@ -10,11 +11,11 @@ export const authenticateUser = async (token) => {
   return;
 };
 
-export const fetchUser = async (authUser) => {
+export const fetchUser = async (authInfo?: DecodedIdToken) => {
   try {
-    if (authUser.user_id) {
+    if (authInfo?.user_id) {
       return (
-        await getFirestore().doc(`users/${authUser.user_id}`).get()
+        await getFirestore().doc(`users/${authInfo.user_id}`).get()
       ).data();
     }
   } catch (error) {

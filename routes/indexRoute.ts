@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { fetchUser, authenticateUser } from "../utils/firebase.js";
 import { initializeApp, cert } from "firebase-admin/app";
-import firebaseConfig from "./../utils/firebase-config.js";
+import firebaseConfig from "../utils/firebase-config.js";
 
 const router = Router();
 
@@ -13,11 +13,11 @@ if (process.env.EMULATOR_URL) {
 }
 
 initializeApp({
-  credential: cert(firebaseConfig),
+  credential: cert(firebaseConfig()),
 });
 
 router.post("/", async (req, res) => {
-  const token = req.header("Authorization").split("Bearer ")[1];
+  const token = req.header("Authorization")?.split("Bearer ")[1];
   try {
     const auth = await authenticateUser(token);
     const user = await fetchUser(auth);

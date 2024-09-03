@@ -34,7 +34,16 @@ const normalizePort = (val) => {
  * Event listener for HTTP server "error" event.
  */
 
-const onError = (error) => {
+interface NodeSystemError extends Error {
+  code?: string;
+  errno?: number;
+  syscall?: string;
+  path?: string;
+  address?: string;
+  port?: number;
+}
+
+const onError = (error: NodeSystemError) => {
   if (error.syscall !== "listen") {
     throw error;
   }
