@@ -5,11 +5,11 @@ import firebaseConfig from "./../utils/firebase-config.js";
 
 const router = Router();
 
-// Use '192.168.50.229' for Docker
-// Use localhost for local
-if (process.env.EMULATOR_ENV) {
-  process.env["FIRESTORE_EMULATOR_HOST"] = "localhost:8080";
-  process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "localhost:9099";
+if (process.env.EMULATOR_URL) {
+  process.env["FIRESTORE_EMULATOR_HOST"] = `${process.env.EMULATOR_URL}:8080`;
+  process.env[
+    "FIREBASE_AUTH_EMULATOR_HOST"
+  ] = `${process.env.EMULATOR_URL}:9099`;
 }
 
 initializeApp({
