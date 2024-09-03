@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www ",
+    "dev": "nodemon ./bin/www",
+    "deploy:gcp": "docker compose build && gcloud builds submit --tag gcr.io/teaworkapp/teawork-be --project teaworkapp && gcloud run deploy --image gcr.io/teaworkapp/teawork-be --project teaworkapp --platform managed"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

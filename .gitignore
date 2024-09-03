@@ -131,3 +131,5 @@ dist
 
 .env.development
 teaworkapp-firebase-adminsdk-lfjb4-82c588d432.json
+
+.DS_Store
