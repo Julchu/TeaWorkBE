@@ -1,14 +1,14 @@
 var express = require("express");
 var router = express.Router();
 
-const fetchUser = require("../utils/firebase");
+const { authenticateUser, fetchUser } = require("../utils/firebase");
 
 var admin = require("firebase-admin");
 
 var firebaseConfig = require("./../utils/firebase-config.js");
 
-process.env["FIRESTORE_EMULATOR_HOST"] = "192.168.50.229:8080";
-process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "192.168.50.229:9099";
+process.env["FIRESTORE_EMULATOR_HOST"] = "127.0.0.1:8080";
+process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "127.0.0.1:9099";
 
 admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
@@ -16,11 +16,10 @@ admin.initializeApp({
 
 router.post("/", async (req, res) => {
   const token = req.header("Authorization").split("Bearer ")[1];
-  console.log("token", token);
   try {
-    const user = await fetchUser(token);
-    if (user) res.send(user);
-    else res.send("nothing");
+    const auth = await authenticateUser(token);
+    const user = await fetchUser(auth);
+    res.send(user);
   } catch (e) {
     res.send("nothing");
   }

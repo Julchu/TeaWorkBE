@@ -1,25 +1,26 @@
 const { getAuth } = require("firebase-admin/auth");
 const { getFirestore } = require("firebase-admin/firestore");
 
-const fetchUser = async (token) => {
+const authenticateUser = async (token) => {
   try {
-    const auth = await getAuth().verifyIdToken(token);
-    const userInfo = (
-      await getFirestore().doc(`users/${auth.user_id}`).get()
-    ).data();
-    // .collection("users").
-    // .get() // const userInfo = (
-    //   await getFirestore().collection("users").get(auth.user_id)
-    // ).docs.map((doc) => console.log(doc)); //.listDocuments(auth.user_id)
-
-    // console.log("auth", auth.user_id);
-    // console.log("userInfo", userInfo);
-
-    return userInfo;
+    return await getAuth().verifyIdToken(token);
   } catch (error) {
-    console.log("error authorization", error);
-    return null;
+    console.error("Error authenticating user", error);
   }
+  return;
 };
 
-module.exports = fetchUser;
+const fetchUser = async (authUser) => {
+  try {
+    if (authUser.user_id) {
+      return (
+        await getFirestore().doc(`users/${authUser.user_id}`).get()
+      ).data();
+    }
+  } catch (error) {
+    console.error("Error fetching user", error);
+  }
+  return;
+};
+
+module.exports = { fetchUser, authenticateUser };
