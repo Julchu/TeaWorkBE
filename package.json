@@ -13,6 +13,7 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-rate-limit": "^7.4.0",
     "firebase-admin": "^12.4.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
@@ -20,6 +21,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/morgan": "^1.9.9",
     "eslint": "^9.9.1",
     "globals": "^15.9.0",
     "nodemon": "^3.1.4",

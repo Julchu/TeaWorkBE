@@ -3,6 +3,7 @@ import express, { json, urlencoded } from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import { rateLimit } from "express-rate-limit";
 
 import indexRouter from "./routes/indexRoute.js";
 
@@ -25,6 +26,20 @@ app.use("/", indexRouter);
 app.use(function (req, res, next) {
   next(createError(404));
 });
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  keyGenerator: (req, res) => {
+    if (!req.headers.authorization) return 1;
+    return req.ip;
+  },
+});
+
+// Apply the rate limiting middleware to all requests.
+app.use(limiter);
 
 // error handler
 app.use(function (err, req, res, next) {
