@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fetchUser, authenticateUser } from "../utils/firebase.js";
+import { fetchUser, authenticateUser, fetchGeo } from "../utils/firebase.js";
 import { initializeApp, cert } from "firebase-admin/app";
 import firebaseConfig from "./../utils/firebase-config.js";
 
@@ -16,20 +16,17 @@ initializeApp({
   credential: cert(firebaseConfig),
 });
 
-router.post("/", async (req, res) => {
-  const token = req.header("Authorization").split("Bearer ")[1];
-  try {
-    const auth = await authenticateUser(token);
-    const user = await fetchUser(auth);
-    res.send(user);
-  } catch (e) {
-    res.send("nothing");
-  }
+router.post("/currentUser", async (req, res) => {
+  const userId = req["userId"];
+  const currentUser = await fetchUser(userId);
+  if (currentUser) res.send({ currentUser });
+  else res.send("Nothing");
 });
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
+router.post("/geo", async (req, res) => {
+  const geo = await fetchGeo(req.body["ip"]);
+  if (geo) res.send({ geo });
+  else res.send("Nothing");
 });
 
 export default router;
