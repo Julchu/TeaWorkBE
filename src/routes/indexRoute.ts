@@ -13,12 +13,7 @@ if (process.env.EMULATOR_URL) {
   ] = `${process.env.EMULATOR_URL}:9099`;
 }
 
-/* 
-
- projectId: "<PROJECT_ID>",
-    clientEmail: "foo@<PROJECT_ID>.iam.gserviceaccount.com",
-    privateKey:
-    */
+/*  */
 try {
   const firebaseConfig = getFirebaseConfig;
   if (firebaseConfig)
