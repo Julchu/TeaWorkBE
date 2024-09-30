@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { fetchUser, authenticateUser, fetchGeo } from "../utils/firebase.js";
+import { fetchUser, fetchGeo } from "../utils/firebase.js";
 import { initializeApp, cert } from "firebase-admin/app";
 import getFirebaseConfig from "../utils/firebase-config.js";
+import { AuthRequest } from "@/app.ts";
 
 const router = Router();
 
@@ -11,12 +12,24 @@ if (process.env.EMULATOR_URL) {
     "FIREBASE_AUTH_EMULATOR_HOST"
   ] = `${process.env.EMULATOR_URL}:9099`;
 }
-if (getFirebaseConfig)
-  initializeApp({
-    credential: cert(getFirebaseConfig()),
-  });
 
-router.post("/currentUser", async (req, res) => {
+/* 
+
+ projectId: "<PROJECT_ID>",
+    clientEmail: "foo@<PROJECT_ID>.iam.gserviceaccount.com",
+    privateKey:
+    */
+try {
+  const firebaseConfig = getFirebaseConfig;
+  if (firebaseConfig)
+    initializeApp({
+      credential: cert(firebaseConfig),
+    });
+} catch (error) {
+  console.error("Invalid Firebase config", error);
+}
+
+router.post("/currentUser", async (req: AuthRequest, res) => {
   const userId = req["userId"];
   const currentUser = await fetchUser(userId);
   if (currentUser) res.send({ currentUser });

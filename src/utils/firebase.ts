@@ -29,11 +29,11 @@ export const fetchGeo = async (ip?: string) => {
       process.env.IPINFO_GEOLOCATION_API_KEY
     }`;
     const res = await fetch(new URL(url).href);
-    const geolocation = await res.json();
-    if (geolocation["loc"] && geolocation["loc"].length > 1)
+    const geolocation = (await res.json()) as { loc: string };
+    if (geolocation.loc && geolocation.loc.length > 1)
       return {
-        lat: geolocation["loc"][0],
-        lng: geolocation["loc"][1],
+        lat: geolocation.loc[0],
+        lng: geolocation.loc[1],
       };
   } catch (error) {
     console.error("Error fetching geolocation", error);

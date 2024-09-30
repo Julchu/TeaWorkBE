@@ -1,5 +1,11 @@
 import createError from "http-errors";
-import express, { json, urlencoded } from "express";
+import express, {
+  json,
+  Request,
+  Response,
+  NextFunction,
+  urlencoded,
+} from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
@@ -16,17 +22,29 @@ const limiter = rateLimit({
   limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
   standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-  keyGenerator: (req, res) => {
+  keyGenerator: (req) => {
     if (!req.headers.authorization) return "1";
-    return req.ip;
+    return req.ip || "";
   },
 });
 
+interface Error {
+  message?: string;
+  status?: number;
+}
+
+export interface AuthRequest extends Request {
+  userId?: string;
+}
+
 // Can pass values to req; ex: req.userId = "userId"; console.log(req['userId])
-// TODO: refactor with better undefined catching
-const authLayer = async (req, res, next) => {
+const authLayer = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const token = req.header("Authorization").split("Bearer ")[1];
+    const token = req.header("Authorization")?.split("Bearer ")[1];
     const auth = await authenticateUser(token);
     if (auth) {
       req.userId = auth.user_id;
@@ -52,8 +70,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Apply the rate limiting middleware to all requests.
 app.use(limiter);
 // Auth layer
-app.use(authLayer);
-app.use("/userInfo", indexRouter);
+app.use("/userInfo", authLayer, indexRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -61,7 +78,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};

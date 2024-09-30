@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-import app from "./app";
+import app from "./app.ts";
 import debug from "debug";
 import { createServer } from "http";
 
@@ -14,7 +14,7 @@ const debugServer = debug("teawork-be:server");
  * Normalize a port into a number, string, or false.
  */
 
-const normalizePort = (val) => {
+const normalizePort = (val: string) => {
   const port = parseInt(val, 10);
 
   if (isNaN(port)) {
@@ -71,8 +71,11 @@ const onError = (error: NodeSystemError) => {
 
 const onListening = () => {
   const addr = server.address();
-  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  debugServer("Listening on " + bind);
+  if (addr) {
+    const bind =
+      typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+    debugServer("Listening on " + bind);
+  }
 };
 
 /**
