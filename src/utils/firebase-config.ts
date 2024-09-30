@@ -15,7 +15,3 @@ const getFirebaseConfig: ServiceAccount = {
 };
 
 export default getFirebaseConfig;
-
-// projectId
-// clientEmail
-// privateKey
