@@ -37,4 +37,9 @@ router.post("/geo", async (req, res) => {
   else res.send("Nothing");
 });
 
+/* Google OAuth2.0 scopes for Google/MyMaps data
+* "https://www.googleapis.com/auth/dataportability.mymaps.maps",
+* "https://www.googleapis.com/auth/dataportability.maps.starred_places",
+* */
+
 export default router;
