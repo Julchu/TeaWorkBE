@@ -1,32 +1,12 @@
 import { Router } from "express";
-import { fetchUser, fetchGeo } from "../utils/firebase.js";
-import { initializeApp, cert } from "firebase-admin/app";
-import getFirebaseConfig from "../utils/firebase-config.js";
-import { AuthRequest } from "@/app.ts";
+import { fetchGeo } from "../utils/geo.js";
+import { getUserById } from "../modules/user/user.service.js";
+import type { AuthRequest } from "../types/index.js";
 
 const router = Router();
 
-if (process.env.EMULATOR_URL) {
-  process.env["FIRESTORE_EMULATOR_HOST"] = `${process.env.EMULATOR_URL}:8080`;
-  process.env[
-    "FIREBASE_AUTH_EMULATOR_HOST"
-  ] = `${process.env.EMULATOR_URL}:9099`;
-}
-
-/*  */
-try {
-  const firebaseConfig = getFirebaseConfig;
-  if (firebaseConfig)
-    initializeApp({
-      credential: cert(firebaseConfig),
-    });
-} catch (error) {
-  console.error("Invalid Firebase config", error);
-}
-
 router.post("/currentUser", async (req: AuthRequest, res) => {
-  const userId = req["userId"];
-  const currentUser = await fetchUser(userId);
+  const currentUser = await getUserById(req.userId);
   if (currentUser) res.send({ currentUser });
   else res.send("Nothing");
 });
@@ -36,10 +16,5 @@ router.post("/geo", async (req, res) => {
   if (geo) res.send({ geo });
   else res.send("Nothing");
 });
-
-/* Google OAuth2.0 scopes for Google/MyMaps data
-* "https://www.googleapis.com/auth/dataportability.mymaps.maps",
-* "https://www.googleapis.com/auth/dataportability.maps.starred_places",
-* */
 
 export default router;
